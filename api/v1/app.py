@@ -5,7 +5,6 @@ Starting an API
 from models import storage
 from api.v1.views import app_views
 from flask import Flask
-from werkzeug.exceptions import NotFound
 from flask import jsonify
 from os import environ
 from flask_cors import CORS
@@ -25,7 +24,7 @@ def close(Exception):
     storage.close()
 
 
-@app.errorhandler(NotFound)
+@app.errorhandler(404)
 def not_found(error):
     """
     Returns a 404 status code
