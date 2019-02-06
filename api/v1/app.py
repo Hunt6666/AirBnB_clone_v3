@@ -18,7 +18,7 @@ app.config.update(JSONIFY_PRETTYPRINT_REGULAR=True)
 
 
 @app.teardown_appcontext
-def close(content):
+def close(Exception):
     """
     handling teardowns
     """
@@ -34,10 +34,10 @@ def not_found(error):
 
 
 if __name__ == "__main__":
+    host = '0.0.0.0'
+    port = 5000
     if not environ.get('HBNB_API_HOST'):
-        environ['HBNB_API_HOST'] = '0.0.0.0'
+        host = environ['HBNB_API_HOST']
     if not environ.get('HBNB_API_PORT'):
-        environ['HBNB_API_PORT'] = '5000'
-    app.run(host=environ['HBNB_API_HOST'],
-            port=environ['HBNB_API_PORT'],
-            threaded=True)
+        port = int(environ['HBNB_API_PORT'])
+    app.run(host=host, port=port, threaded=True)
