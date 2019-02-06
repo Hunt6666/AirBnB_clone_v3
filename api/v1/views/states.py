@@ -11,7 +11,7 @@ from models.state import State
 
 @app_views.route('/states', methods=['GET', 'POST'], strict_slashes=False)
 def states():
-    """ gets a list of all states"""
+    """ gets a list of all states or makes one"""
     if request.method == 'GET':
         lst = []
         objs = storage.all('State')
@@ -34,7 +34,7 @@ def states():
 @app_views.route('/states/<state_id>', methods=['GET', 'DELETE', 'PUT'],
                  strict_slashes=False)
 def state_by_id(state_id):
-    """ gets a single state by id """
+    """ gets a single state by id shows deletes or alters it"""
     if request.method == 'GET':
         st = storage.get("State", state_id)
         if st is None:
