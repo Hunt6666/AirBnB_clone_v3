@@ -8,20 +8,21 @@ from models import storage
 
 
 @app_views.route('/amenities', methods=['GET', 'POST'], strict_slashes=False)
-def states():
+def amenities():
     """ gets a list of all states"""
     if request.method == 'GET':
         lst = []
-        objs = storage.all('State')
+        objs = storage.all('Amenity')
         for k, v in objs.items():
             lst += [v.to_dict()]
         return jsonify(lst)
     if request.method == 'POST':
+        return "Not Done"
 
 
 @app_views.route('/amenities/<amenity_id>', methods=['GET', 'DELETE', 'PUT'],
                  strict_slashes=False)
-def state_by_id(amenity_id):
+def amenities_by_id(amenity_id):
     """ gets a single state by id """
     if request.method == 'GET':
         am = storage.get("Amenity", amenity_id)
@@ -42,7 +43,7 @@ def state_by_id(amenity_id):
         if am == None:
             return jsonify({"error": "Not found"}), 404
         else:
-            
+            return "Not Done"
 
 if __name__ == "__main__":
     if not environ.get('HBNB_API_HOST'):

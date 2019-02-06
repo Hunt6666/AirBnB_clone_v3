@@ -1,15 +1,6 @@
 #!/usr/bin/python3
 """
 """
-from flask import request
-from flask import Flask
-from models import storage
-from flask import jsonify
-
-
-app_views.route('/api/v1/states'
-""" states api   """
-
 from api.v1.views import app_views
 from flask import request, jsonify
 from flask import Flask
@@ -26,6 +17,7 @@ def states():
             lst += [v.to_dict()]
         return jsonify(lst)
     if request.method == 'POST':
+        return "Not Done"
 
 
 @app_views.route('/states/<state_id>', methods=['GET', 'DELETE', 'PUT'],
@@ -52,7 +44,12 @@ def state_by_id(state_id):
         if st == None:
             return jsonify({"error": "Not found"}), 404
         else:
-            
+            return "Not Done"
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+    if not environ.get('HBNB_API_HOST'):
+        environ['HBNB_API_HOST'] = '0.0.0.0'
+    if not environ.get('HBNB_API_PORT'):
+        environ['HBNB_API_PORT'] = '5000'
+    app.run(host=environ['HBNB_API_HOST'], port=environ['HBNB_API_PORT'],
+            threaded=True)
