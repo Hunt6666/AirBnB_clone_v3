@@ -5,10 +5,8 @@ Creating a new view for Cities
 from models import storage
 from api.v1.views import app_views
 from flask import Flask
-from werkzeug.exceptions import NotFound
 from flask import jsonify, abort, request
 from os import environ
-from models.city import City
 
 
 @app_views.route('/states/<state_id>/cities', strict_slashes=False, methods=['GET'])
