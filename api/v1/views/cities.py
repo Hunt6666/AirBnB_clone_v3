@@ -9,7 +9,8 @@ from flask import jsonify, abort, request
 from os import environ
 
 
-@app_views.route('/states/<state_id>/cities', strict_slashes=False, methods=['GET'])
+@app_views.route('/states/<state_id>/cities', strict_slashes=False,
+                 methods=['GET'])
 def show_cities(state_id):
     """
     Shows all states in file storage
@@ -35,7 +36,9 @@ def show_a_city(city_id):
         else:
             return jsonify({"error": "Not found"}), 404
 
-@app_views.route('/cities/<city_id>', strict_slashes=False, methods=['DELETE'])
+
+@app_views.route('/cities/<city_id>', strict_slashes=False,
+                 methods=['DELETE'])
 def del_a_city(city_id):
     """
     Deletes a city by city_id; if found
@@ -47,6 +50,7 @@ def del_a_city(city_id):
             return jsonify({}), 200
         else:
             return jsonify({"error": "Not found"}), 404
+
 
 @app_views.route('cities/<city_id>', strict_slashes=False, methods=['PUT'])
 def update_a_city(city_id):
@@ -67,7 +71,9 @@ def update_a_city(city_id):
         return (jsonify({"error": "Not a JSON"}), 400)
     return jsonify(city.to_dict()), 200
 
-@app_views.route('/states/<state_id>/cities', strict_slashes=False, methods=['POST'])
+
+@app_views.route('/states/<state_id>/cities', strict_slashes=False,
+                 methods=['POST'])
 def create_a_city(state_id):
     """
     Creates a new city using state_id
@@ -91,4 +97,6 @@ if __name__ == "__main__":
         environ['HBNB_API_HOST'] = '0.0.0.0'
     if not environ.get('HBNB_API_PORT'):
         environ['HBNB_API_PORT'] = '5000'
-    app.run(host=environ['HBNB_API_HOST'], port=environ['HBNB_API_PORT'], threaded=True)
+    app.run(host=environ['HBNB_API_HOST'],
+            port=environ['HBNB_API_PORT'],
+            threaded=True)

@@ -14,6 +14,7 @@ def status():
     """
     return jsonify({'status': 'OK'})
 
+
 @app_views.route('/stats', strict_slashes=False)
 def count():
     """
@@ -21,9 +22,9 @@ def count():
     """
     stats = {}
     stats['amenities'] = storage.count('Amenity')
-    stats['cities'] =storage.count('City')
-    stats['places'] =storage.count('Place')
-    stats['reviews'] =storage.count('Review')
-    stats['states'] =storage.count('State')
-    stats['users'] =storage.count('User')
+    stats['cities'] = storage.count('City')
+    stats['places'] = storage.count('Place')
+    stats['reviews'] = storage.count('Review')
+    stats['states'] = storage.count('State')
+    stats['users'] = storage.count('User')
     return jsonify(stats)

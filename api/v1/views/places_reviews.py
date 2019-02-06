@@ -41,7 +41,7 @@ def places_review(place_id):
         if stf is None:
             return jsonify("Not a JSON"), 400
         u_id = stf["user_id"]
-        if u_id == None:
+        if u_id is None:
             return jsonify("Missing user_id"), 400
         usr = storage.get("User", u_id)
         if usr is None:
@@ -61,6 +61,8 @@ def places_review(place_id):
                  strict_slashes=False)
 def review_by_id(review_id):
     """ gets a single review by id shows deletes or alters it"""
+    ignore = ['id', 'created_at', 'updated_at', 'user_id',
+              'place_id']
     if request.method == 'GET':
         rv = storage.get("Review", review_id)
         if rv is None:
@@ -69,7 +71,7 @@ def review_by_id(review_id):
             return jsonify(rv.to_dict())
     if request.method == 'DELETE':
         rv = storage.get("Review", review_id)
-        if rv == None:
+        if rv is None:
             return jsonify({"error": "Not found"}), 404
         else:
             storage.delete(rv)
@@ -84,8 +86,7 @@ def review_by_id(review_id):
             if stf is None:
                 return jsonify("Not a JSON"), 400
             for k, v in stf.items():
-                if (k != "id" and k != "created_at" and k != "updated_at"
-                    and k != "user_id" and k != "place_id"):
+                if k not in ignore:
                     setattr(rv, k, v)
             rv.save()
             return jsonify(rv.to_dict()), 200

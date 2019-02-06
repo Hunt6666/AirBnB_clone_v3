@@ -41,7 +41,7 @@ def places_city(city_id):
         if stf is None:
             return jsonify("Not a JSON"), 400
         u_id = stf["user_id"]
-        if u_id == None:
+        if u_id is None:
             return jsonify("Missing user_id"), 400
         usr = storage.get("User", u_id)
         if usr is None:
@@ -61,6 +61,8 @@ def places_city(city_id):
                  strict_slashes=False)
 def place_by_id(place_id):
     """ gets a single place by id shows, deletes or alters it"""
+    ignore = ['id', 'created_at', 'updated_at',
+              'user_id', 'city_id']
     if request.method == 'GET':
         pl = storage.get("Place", place_id)
         if pl is None:
@@ -69,7 +71,7 @@ def place_by_id(place_id):
             return jsonify(pl.to_dict())
     if request.method == 'DELETE':
         pl = storage.get("Place", place_id)
-        if pl == None:
+        if pl is None:
             return jsonify({"error": "Not found"}), 404
         else:
             storage.delete(pl)
@@ -77,15 +79,14 @@ def place_by_id(place_id):
             return jsonify({}), 200
     if request.method == 'PUT':
         pl = storage.get("Place", place_id)
-        if pl == None:
+        if pl is None:
             abort(404)
         else:
             stf = request.get_json()
             if stf is None:
                 return jsonify("Not a JSON"), 400
             for k, v in stf.items():
-                if (k != "id" and k != "created_at" and k != "updated_at"
-                    and k != "user_id" and k != "city_id"):
+                if (k not in ignore):
                     setattr(pl, k, v)
             pl.save()
             return jsonify(pl.to_dict()), 200

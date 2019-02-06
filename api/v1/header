@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-#creates a python script header, takes in short description
-description=$2
-echo "#!/usr/bin/python3" >> $1
-echo "\"""\"""\"" >> $1
-echo $description >> $1
-echo "\"""\"""\"" >> $1
-chmod u+x $1
-emacs $1

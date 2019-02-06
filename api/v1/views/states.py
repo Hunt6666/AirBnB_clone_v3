@@ -52,7 +52,7 @@ def state_by_id(state_id):
             return jsonify({}), 200
     if request.method == 'PUT':
         st = storage.get("State", state_id)
-        if st == None:
+        if st is None:
             return jsonify({"error": "Not found"}), 404
         else:
             stf = request.get_json()
