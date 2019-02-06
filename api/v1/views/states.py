@@ -63,12 +63,3 @@ def state_by_id(state_id):
                     setattr(st, k, v)
             st.save()
             return jsonify(st.to_dict()), 200
-
-
-if __name__ == "__main__":
-    if not environ.get('HBNB_API_HOST'):
-        environ['HBNB_API_HOST'] = '0.0.0.0'
-    if not environ.get('HBNB_API_PORT'):
-        environ['HBNB_API_PORT'] = '5000'
-    app.run(host=environ['HBNB_API_HOST'], port=environ['HBNB_API_PORT'],
-            threaded=True)
