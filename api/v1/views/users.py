@@ -18,6 +18,7 @@ def list_users():
     for user in storage.all('User').values():
         return jsonify(user.to_dict())
 
+
 @app_views.route('/users/<user_id>', strict_slashes=False, methods=['GET'])
 def list_a_user(user_id):
     """
@@ -28,6 +29,7 @@ def list_a_user(user_id):
             return jsonify(user.to_dict())
         else:
             abort(404)
+
 
 @app_views.route('/users/<user_id>', strict_slashes=False, methods=['DELETE'])
 def del_a_user(user_id):
@@ -41,6 +43,7 @@ def del_a_user(user_id):
             return jsonify({}), 200
         else:
             return jsonify({"error": "Not found"}), 404
+
 
 @app_views.route('/users/<user_id>', strict_slashes=False, methods=['PUT'])
 def update_a_user(user_id):
@@ -59,6 +62,7 @@ def update_a_user(user_id):
         return (jsonify({"error": "Not a JSON"}), 400)
     user.save()
     return jsonify(user.to_dict()), 200
+
 
 @app_views.route('/users', strict_slashes=False, methods=['POST'])
 def create_a_user():
@@ -82,6 +86,6 @@ if __name__ == "__main__":
         environ['HBNB_API_HOST'] = '0.0.0.0'
     if not environ.get('HBNB_API_PORT'):
         environ['HBNB_API_PORT'] = '5000'
-    app.run(host=environ['HBNB_API_HOST'], 
-            port=environ['HBNB_API_PORT'], 
+    app.run(host=environ['HBNB_API_HOST'],
+            port=environ['HBNB_API_PORT'],
             threaded=True)

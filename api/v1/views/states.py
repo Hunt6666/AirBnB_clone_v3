@@ -23,7 +23,7 @@ def states():
         if stf is None:
             return jsonify("Not a JSON"), 400
         name = stf["name"]
-        if name == None:
+        if name is None:
             return jsonify("Missing name"), 400
         st = State()
         st.name = name
@@ -43,7 +43,7 @@ def state_by_id(state_id):
             return jsonify(st.to_dict())
     if request.method == 'DELETE':
         st = storage.get("State", state_id)
-        if st == None:
+        if st is None:
             return jsonify({"error": "Not found"}), 404
         else:
             key = "State." + str(state_id)
@@ -52,7 +52,7 @@ def state_by_id(state_id):
             return jsonify({}), 200
     if request.method == 'PUT':
         st = storage.get("State", state_id)
-        if st == None:
+        if st is None:
             return jsonify({"error": "Not found"}), 404
         else:
             stf = request.get_json()
