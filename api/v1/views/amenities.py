@@ -45,4 +45,9 @@ def state_by_id(amenity_id):
             
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+    if not environ.get('HBNB_API_HOST'):
+        environ['HBNB_API_HOST'] = '0.0.0.0'
+    if not environ.get('HBNB_API_PORT'):
+        environ['HBNB_API_PORT'] = '5000'
+    app.run(host=environ['HBNB_API_HOST'], port=environ['HBNB_API_PORT'],
+            threaded=True)
