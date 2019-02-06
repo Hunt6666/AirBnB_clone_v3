@@ -5,6 +5,7 @@ from api.v1.views import app_views
 from flask import request, jsonify
 from flask import Flask
 from models import storage
+from models.amenity import Amenity
 
 
 @app_views.route('/amenities', methods=['GET', 'POST'], strict_slashes=False)
@@ -17,7 +18,17 @@ def amenities():
             lst += [v.to_dict()]
         return jsonify(lst)
     if request.method == 'POST':
-        return "Not Done"
+        stf = request.get_json()
+        if stf is None:
+            return jsonify("Not a JSON"), 400
+        name = stf["name"]
+        if name == None:
+            return jsonify("Missing name"), 400
+        am = Amenity()
+        am.name = name
+        am.save()
+        return jsonify(am.to_dict()), 201
+
 
 
 @app_views.route('/amenities/<amenity_id>', methods=['GET', 'DELETE', 'PUT'],
@@ -43,7 +54,16 @@ def amenities_by_id(amenity_id):
         if am == None:
             return jsonify({"error": "Not found"}), 404
         else:
-            return "Not Done"
+            stf = request.get_json()
+            if stf is None:
+                return jsonify("Not a JSON"), 400
+            for k, v in stf.items():
+                if k != "id" and k != "created_at" and k != "updated_at":
+                    setattr(am, k, v)
+            am.save()
+            return jsonify(am.to_dict()), 200
+
+
 
 if __name__ == "__main__":
     if not environ.get('HBNB_API_HOST'):

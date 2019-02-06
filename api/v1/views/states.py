@@ -55,7 +55,6 @@ def state_by_id(state_id):
         if st == None:
             return jsonify({"error": "Not found"}), 404
         else:
-            storage.get("State", state_id)
             stf = request.get_json()
             if stf is None:
                 return jsonify("Not a JSON"), 400
