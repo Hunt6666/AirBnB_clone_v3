@@ -1,10 +1,12 @@
 #!/usr/bin/python3
 """
+State api
 """
 from api.v1.views import app_views
 from flask import request, jsonify
 from flask import Flask
 from models import storage
+from models.state import State
 
 
 @app_views.route('/states', methods=['GET', 'POST'], strict_slashes=False)
@@ -17,7 +19,16 @@ def states():
             lst += [v.to_dict()]
         return jsonify(lst)
     if request.method == 'POST':
-        return "Not Done"
+        stf = request.get_json()
+        if stf is None:
+            return jsonify("Not a JSON"), 400
+        name = stf["name"]
+        if name == None:
+            return jsonify("Missing name"), 400
+        st = State()
+        st.name = name
+        st.save()
+        return jsonify(st.to_dict()), 201
 
 
 @app_views.route('/states/<state_id>', methods=['GET', 'DELETE', 'PUT'],
@@ -44,7 +55,16 @@ def state_by_id(state_id):
         if st == None:
             return jsonify({"error": "Not found"}), 404
         else:
-            return "Not Done"
+            storage.get("State", state_id)
+            stf = request.get_json()
+            if stf is None:
+                return jsonify("Not a JSON"), 400
+            for k, v in stf.items():
+                if k != "id" and k != "created_at" and k != "updated_at":
+                    setattr(st, k, v)
+            st.save()
+            return jsonify(st.to_dict()), 200
+
 
 if __name__ == "__main__":
     if not environ.get('HBNB_API_HOST'):
