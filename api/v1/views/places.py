@@ -52,6 +52,7 @@ def places_city(city_id):
         pl = Place()
         pl.user_id = u_id
         pl.name = name
+        pl.city_id = city_id
         pl.save()
         return jsonify(pl.to_dict()), 201
 

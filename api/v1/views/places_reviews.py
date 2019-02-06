@@ -5,7 +5,7 @@ from api.v1.views import app_views
 from flask import request, jsonify, abort, make_response
 from flask import Flask
 from models import storage
-from models.place import Place
+from models.review import Review
 
 
 @app_views.route('/reviews', methods=['GET'], strict_slashes=False)
@@ -52,6 +52,7 @@ def places_review(place_id):
         rv = Review()
         rv.user_id = u_id
         rv.text = txt
+        rv.place_id = place_id
         rv.save()
         return jsonify(rv.to_dict()), 201
 
