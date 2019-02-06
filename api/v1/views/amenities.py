@@ -22,13 +22,12 @@ def amenities():
         if stf is None:
             return jsonify("Not a JSON"), 400
         name = stf["name"]
-        if name == None:
+        if name is None:
             return jsonify("Missing name"), 400
         am = Amenity()
         am.name = name
         am.save()
         return jsonify(am.to_dict()), 201
-
 
 
 @app_views.route('/amenities/<amenity_id>', methods=['GET', 'DELETE', 'PUT'],
@@ -43,7 +42,7 @@ def amenities_by_id(amenity_id):
             return jsonify(am.to_dict())
     if request.method == 'DELETE':
         am = storage.get("Amenity", amenity_id)
-        if am == None:
+        if am is None:
             return jsonify({"error": "Not found"}), 404
         else:
             storage.delete(am)
@@ -51,7 +50,7 @@ def amenities_by_id(amenity_id):
             return jsonify({}), 200
     if request.method == 'PUT':
         am = storage.get("Amenity", amenity_id)
-        if am == None:
+        if am is None:
             return jsonify({"error": "Not found"}), 404
         else:
             stf = request.get_json()
@@ -62,7 +61,6 @@ def amenities_by_id(amenity_id):
                     setattr(am, k, v)
             am.save()
             return jsonify(am.to_dict()), 200
-
 
 
 if __name__ == "__main__":
