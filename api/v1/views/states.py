@@ -20,7 +20,7 @@ def states():
         return jsonify(lst)
     if request.method == 'POST':
         stf = request.get_json()
-        if stf == None:
+        if stf is None:
             return jsonify("Not a JSON"), 400
         name = stf["name"]
         if name is None:
@@ -37,7 +37,7 @@ def state_by_id(state_id):
     """ gets a single state by id shows deletes or alters it"""
     if request.method == 'GET':
         st = storage.get("State", state_id)
-        if st == None:
+        if st is None:
             return jsonify({"error": "Not found"}), 404
         else:
             return jsonify(st.to_dict())
