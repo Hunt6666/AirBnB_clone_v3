@@ -1,20 +1,19 @@
 #!/usr/bin/python3
-"""
-State api
-"""
+""" states api   """
+
 from api.v1.views import app_views
 from flask import request, jsonify
 from flask import Flask
 from models import storage
-from models.state import State
+from models.amenity import Amenity
 
 
-@app_views.route('/states', methods=['GET', 'POST'], strict_slashes=False)
-def states():
+@app_views.route('/amenities', methods=['GET', 'POST'], strict_slashes=False)
+def amenities():
     """ gets a list of all states"""
     if request.method == 'GET':
         lst = []
-        objs = storage.all('State')
+        objs = storage.all('Amenity')
         for k, v in objs.items():
             lst += [v.to_dict()]
         return jsonify(lst)
@@ -25,34 +24,34 @@ def states():
         name = stf["name"]
         if name == None:
             return jsonify("Missing name"), 400
-        st = State()
-        st.name = name
-        st.save()
-        return jsonify(st.to_dict()), 201
+        am = Amenity()
+        am.name = name
+        am.save()
+        return jsonify(am.to_dict()), 201
 
 
-@app_views.route('/states/<state_id>', methods=['GET', 'DELETE', 'PUT'],
+
+@app_views.route('/amenities/<amenity_id>', methods=['GET', 'DELETE', 'PUT'],
                  strict_slashes=False)
-def state_by_id(state_id):
+def amenities_by_id(amenity_id):
     """ gets a single state by id """
     if request.method == 'GET':
-        st = storage.get("State", state_id)
-        if st is None:
+        am = storage.get("Amenity", amenity_id)
+        if am is None:
             return jsonify({"error": "Not found"}), 404
         else:
-            return jsonify(st.to_dict())
+            return jsonify(am.to_dict())
     if request.method == 'DELETE':
-        st = storage.get("State", state_id)
-        if st == None:
+        am = storage.get("Amenity", amenity_id)
+        if am == None:
             return jsonify({"error": "Not found"}), 404
         else:
-            key = "State." + str(state_id)
-            storage.delete(st)
+            storage.delete(am)
             storage.save()
             return jsonify({}), 200
     if request.method == 'PUT':
-        st = storage.get("State", state_id)
-        if st == None:
+        am = storage.get("Amenity", amenity_id)
+        if am == None:
             return jsonify({"error": "Not found"}), 404
         else:
             stf = request.get_json()
@@ -60,9 +59,10 @@ def state_by_id(state_id):
                 return jsonify("Not a JSON"), 400
             for k, v in stf.items():
                 if k != "id" and k != "created_at" and k != "updated_at":
-                    setattr(st, k, v)
-            st.save()
-            return jsonify(st.to_dict()), 200
+                    setattr(am, k, v)
+            am.save()
+            return jsonify(am.to_dict()), 200
+
 
 
 if __name__ == "__main__":
