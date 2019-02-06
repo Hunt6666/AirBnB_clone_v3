@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" states api   """
+""" amenity api   """
 
 from api.v1.views import app_views
 from flask import request, jsonify
@@ -10,7 +10,7 @@ from models.amenity import Amenity
 
 @app_views.route('/amenities', methods=['GET', 'POST'], strict_slashes=False)
 def amenities():
-    """ gets a list of all states"""
+    """ gets a list of all amenities or makes one"""
     if request.method == 'GET':
         lst = []
         objs = storage.all('Amenity')
@@ -34,7 +34,7 @@ def amenities():
 @app_views.route('/amenities/<amenity_id>', methods=['GET', 'DELETE', 'PUT'],
                  strict_slashes=False)
 def amenities_by_id(amenity_id):
-    """ gets a single state by id """
+    """ gets a single amenity by id shows deletes or alters it"""
     if request.method == 'GET':
         am = storage.get("Amenity", amenity_id)
         if am is None:
