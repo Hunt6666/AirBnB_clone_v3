@@ -23,8 +23,7 @@ def show_cities(state_id):
     if cities != []:
         return jsonify(cities)
     else:
-        return jsonify({"error": "Not found"}), 404
-
+        abort(404)
 
 @app_views.route('/cities/<city_id>', strict_slashes=False, methods=['GET'])
 def show_a_city(city_id):
@@ -34,8 +33,7 @@ def show_a_city(city_id):
     city = storage.get("City", city_id)
     if city:
         return jsonify(city.to_dict())
-    return jsonify({"error": "Not found"}), 404
-
+    abort(404)
 
 @app_views.route('/cities/<city_id>', strict_slashes=False,
                  methods=['DELETE'])
@@ -49,8 +47,7 @@ def del_a_city(city_id):
         storage.save()
         return jsonify({}), 200
     else:
-        return jsonify({"error": "Not found"}), 404
-
+        abort(404)
 
 @app_views.route('cities/<city_id>', strict_slashes=False, methods=['PUT'])
 def update_a_city(city_id):
@@ -61,9 +58,9 @@ def update_a_city(city_id):
     city = storage.get("City", city_id)
     ignore = ['id', 'state_id', 'created_at', 'updated_at']
     if not info:
-        return jsonify({"error": "Not a JSON"}), 400
+        return "Not a JSON", 400
     if not city:
-        abort(400)
+        abort(404)
     for k, v in info.items():
         if k not in ignore:
             setattr(city, k, v)
@@ -82,10 +79,10 @@ def create_a_city(state_id):
     if not state:
         abort(404)
     if not info.get('name'):
-        return jsonify({"error": "Missing name"}), 400
+        return "Missing name", 400
     if not info:
-        return jsonify({"error": "Not a JSON"}), 400
+        return "Not a JSON", 400
     info['state_id'] = state_id
     city = City(**info)
     city.save()
-    return jsonify(city.to_dict()), 200
+    return jsonify(city.to_dict()), 201
