@@ -3,7 +3,7 @@
 State api
 """
 from api.v1.views import app_views
-from flask import request, jsonify
+from flask import request, jsonify, abort
 from flask import Flask
 from models import storage
 from models.state import State
@@ -38,7 +38,7 @@ def state_by_id(state_id):
     if request.method == 'GET':
         st = storage.get("State", state_id)
         if st is None:
-            return jsonify({"error": "Not found"}), 404
+            abort(404)
         else:
             return jsonify(st.to_dict())
     if request.method == 'DELETE':
