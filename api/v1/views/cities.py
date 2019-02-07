@@ -7,6 +7,7 @@ from api.v1.views import app_views
 from flask import Flask
 from flask import jsonify, abort, request
 from os import environ
+from models.city import City
 
 
 @app_views.route('/states/<state_id>/cities', strict_slashes=False,
@@ -22,20 +23,17 @@ def show_cities(state_id):
     if cities != []:
         return jsonify(cities)
     else:
-        return jsonify({"error": "Not found"}), 404
-
+        abort(404)
 
 @app_views.route('/cities/<city_id>', strict_slashes=False, methods=['GET'])
 def show_a_city(city_id):
     """
     Shows the city associated with city id provided
     """
-    for city in storage.all('City').values():
-        if city.id == city_id:
-            return jsonify(city.to_dict())
-        else:
-            return jsonify({"error": "Not found"}), 404
-
+    city = storage.get("City", city_id)
+    if city:
+        return jsonify(city.to_dict())
+    abort(404)
 
 @app_views.route('/cities/<city_id>', strict_slashes=False,
                  methods=['DELETE'])
@@ -43,14 +41,13 @@ def del_a_city(city_id):
     """
     Deletes a city by city_id; if found
     """
-    for city in storage.all('City').values():
-        if city.id == city_id:
-            city.delete()
-            storage.save()
-            return jsonify({}), 200
-        else:
-            return jsonify({"error": "Not found"}), 404
-
+    city = storage.get("City", city_id)
+    if city:
+        city.delete()
+        storage.save()
+        return jsonify({}), 200
+    else:
+        abort(404)
 
 @app_views.route('cities/<city_id>', strict_slashes=False, methods=['PUT'])
 def update_a_city(city_id):
@@ -58,17 +55,16 @@ def update_a_city(city_id):
     Updates a city
     """
     info = request.get_json()
+    city = storage.get("City", city_id)
     ignore = ['id', 'state_id', 'created_at', 'updated_at']
-    for city in storage.all('City').values():
-        if city.id == city_id:
-            for k, v in info.items():
-                if k not in ignore:
-                    setattr(city, k, v)
-        else:
-            abort(404)
-    city.save()
     if not info:
-        return (jsonify({"error": "Not a JSON"}), 400)
+        return "Not a JSON", 400
+    if not city:
+        abort(404)
+    for k, v in info.items():
+        if k not in ignore:
+            setattr(city, k, v)
+    city.save()
     return jsonify(city.to_dict()), 200
 
 
