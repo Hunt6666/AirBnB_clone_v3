@@ -21,8 +21,9 @@ def amenities():
         stf = request.get_json()
         if stf is None:
             return jsonify("Not a JSON"), 400
-        name = stf["name"]
-        if name is None:
+        try:
+            name = stf["name"]
+        except:
             return jsonify("Missing name"), 400
         am = Amenity()
         am.name = name

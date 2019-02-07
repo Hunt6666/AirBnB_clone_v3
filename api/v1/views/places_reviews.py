@@ -34,20 +34,22 @@ def places_review(place_id):
                 reviews += [v.to_dict()]
         return jsonify(reviews)
     if request.method == 'POST':
-        stf = request.get_json()
+        stf = request.get_json(silent=True)
         place = storage.get('Place', place_id)
         if place is None:
             abort(404)
         if stf is None:
             return jsonify("Not a JSON"), 400
-        u_id = stf["user_id"]
-        if u_id is None:
+        try:
+            u_id = stf["user_id"]
+        except:
             return jsonify("Missing user_id"), 400
         usr = storage.get("User", u_id)
         if usr is None:
             abort(404)
-        txt = stf['text']
-        if txt is None:
+        try:
+            txt = stf['text']
+        except:
             return jsonify("Missing text"), 400
         rv = Review()
         rv.user_id = u_id
