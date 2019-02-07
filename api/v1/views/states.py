@@ -22,8 +22,9 @@ def states():
         stf = request.get_json(silent=True)
         if stf is None:
             return jsonify("Not a JSON"), 400
-        name = stf["name"]
-        if name is None:
+        try:
+            name = stf["name"]
+        except:
             return jsonify("Missing name"), 400
         st = State()
         st.name = name
@@ -46,7 +47,6 @@ def state_by_id(state_id):
         if st is None:
             abort(404)
         else:
-            key = "State." + str(state_id)
             storage.delete(st)
             storage.save()
             return jsonify({}), 200
