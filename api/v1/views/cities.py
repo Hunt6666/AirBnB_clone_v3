@@ -32,9 +32,9 @@ def show_a_city(city_id):
     Shows the city associated with city id provided
     """
     city = storage.get("City", city_id)
-    if city:
-        return jsonify(city.to_dict()), 200
-    abort(404)
+    if city is None:
+        abort(404)
+    return jsonify(city.to_dict()), 200
 
 
 @app_views.route('/cities/<city_id>', strict_slashes=False,
@@ -44,12 +44,12 @@ def del_a_city(city_id):
     Deletes a city by city_id; if found
     """
     city = storage.get("City", city_id)
-    if city:
+    if city is None:
+        abort(404)
+    else:
         city.delete()
         storage.save()
         return jsonify({}), 200
-    else:
-        abort(404)
 
 
 @app_views.route('cities/<city_id>', strict_slashes=False, methods=['PUT'])
@@ -60,15 +60,16 @@ def update_a_city(city_id):
     info = request.get_json(silent=True)
     city = storage.get("City", city_id)
     ignore = ['id', 'state_id', 'created_at', 'updated_at']
-    if not info:
-        return "Not a JSON", 400
-    if not city:
+    if city is None:
         abort(404)
-    for k, v in info.items():
-        if k not in ignore:
-            setattr(city, k, v)
-    city.save()
-    return jsonify(city.to_dict()), 200
+    else:
+        if info is None:
+            return "Not a JSON", 400
+            for k, v in info.items():
+                if k not in ignore:
+                    setattr(city, k, v)
+            city.save()
+            return jsonify(city.to_dict()), 200
 
 
 @app_views.route('/states/<state_id>/cities', strict_slashes=False,
