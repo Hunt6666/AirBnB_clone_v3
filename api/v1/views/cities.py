@@ -25,6 +25,7 @@ def show_cities(state_id):
     else:
         abort(404)
 
+
 @app_views.route('/cities/<city_id>', strict_slashes=False, methods=['GET'])
 def show_a_city(city_id):
     """
@@ -32,8 +33,9 @@ def show_a_city(city_id):
     """
     city = storage.get("City", city_id)
     if city:
-        return jsonify(city.to_dict())
+        return jsonify(city.to_dict()), 200
     abort(404)
+
 
 @app_views.route('/cities/<city_id>', strict_slashes=False,
                  methods=['DELETE'])
@@ -49,12 +51,13 @@ def del_a_city(city_id):
     else:
         abort(404)
 
+
 @app_views.route('cities/<city_id>', strict_slashes=False, methods=['PUT'])
 def update_a_city(city_id):
     """
     Updates a city
     """
-    info = request.get_json()
+    info = request.get_json(silent=True)
     city = storage.get("City", city_id)
     ignore = ['id', 'state_id', 'created_at', 'updated_at']
     if not info:
