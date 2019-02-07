@@ -16,14 +16,11 @@ def show_cities(state_id):
     """
     Shows all states in file storage
     """
-    cities = []
     state = storage.get("State", state_id)
     if state is None:
         abort(404)
-    for city in storage.all('City').values():
-        if city.state_id == state_id and state.id == state_id:
-            cities.append(city.to_dict())
-    return jsonify(cities)
+    cities = state.cities
+    return jsonify([c.to_dict() for c in cities])
 
 
 @app_views.route('/cities/<city_id>', strict_slashes=False, methods=['GET'])
