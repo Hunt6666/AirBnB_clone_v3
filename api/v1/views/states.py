@@ -19,7 +19,7 @@ def states():
             lst += [v.to_dict()]
         return jsonify(lst)
     if request.method == 'POST':
-        stf = request.get_json()
+        stf = request.get_json(silent=True)
         if stf is None:
             return jsonify("Not a JSON"), 400
         name = stf["name"]
@@ -55,7 +55,7 @@ def state_by_id(state_id):
         if st is None:
             return jsonify({"error": "Not found"}), 404
         else:
-            stf = request.get_json()
+            stf = request.get_json(silent=True)
             if stf is None:
                 return jsonify("Not a JSON"), 400
             for k, v in stf.items():
