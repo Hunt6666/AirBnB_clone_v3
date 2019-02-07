@@ -44,7 +44,7 @@ def state_by_id(state_id):
     if request.method == 'DELETE':
         st = storage.get("State", state_id)
         if st is None:
-            return jsonify({"error": "Not found"}), 404
+            abort(404)
         else:
             key = "State." + str(state_id)
             storage.delete(st)
@@ -53,7 +53,7 @@ def state_by_id(state_id):
     if request.method == 'PUT':
         st = storage.get("State", state_id)
         if st is None:
-            return jsonify({"error": "Not found"}), 404
+            abort(404)
         else:
             stf = request.get_json(silent=True)
             if stf is None:
