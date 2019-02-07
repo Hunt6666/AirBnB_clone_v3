@@ -73,11 +73,17 @@ def place_by_id(place_id):
         else:
             try:
                 stf = request.get_json(silent=True)
+                if stf is None:
+                    return jsonify("Not a JSON"), 400
             except:
                 return jsonify("Not a JSON"), 400
-            ignore = ["id", "user_id", "city_id", "created_at", "updated_at"]
+            ignore = ["user", "id", "user_id", "city_id", "created_at",
+                      "updated_at"]
             for k, v in stf.items():
                 if (k not in ignore):
                     setattr(pl, k, v)
             pl.save()
-            return jsonify(pl.to_dict()), 200
+            p_id = pl.id
+            storage.reload()
+            pll = storage.get("Place", p_id)
+            return jsonify(pll.to_dict()), 200
