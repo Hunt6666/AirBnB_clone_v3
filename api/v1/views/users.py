@@ -18,7 +18,7 @@ def list_users():
     users = []
     for user in storage.all('User').values():
         users.append(user.to_dict())
-    return jsonify(users), 200
+    return jsonify(users)
 
 
 @app_views.route('/users/<user_id>', strict_slashes=False, methods=['GET'])
@@ -30,7 +30,7 @@ def show_a_user(user_id):
     if user is None:
         abort(404)
     else:
-        return jsonify(user.to_dict()), 200
+        return jsonify(user.to_dict())
 
 
 @app_views.route('/users/<user_id>', strict_slashes=False, methods=['DELETE'])
