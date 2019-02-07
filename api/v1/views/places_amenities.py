@@ -9,17 +9,6 @@ from models.place import Place
 from models.amenity import Amenity
 
 
-@app_views.route('/reviews', methods=['GET'], strict_slashes=False)
-def reviews_not():
-    """ gets a list of all reviews"""
-    if request.method == 'GET':
-        lst = []
-        objs = storage.all('Review')
-        for k, v in objs.items():
-            lst += [v.to_dict()]
-        return jsonify(lst)
-
-
 @app_views.route('/places/<place_id>/amenities', methods=['POST', 'GET'],
                  strict_slashes=False)
 def places_review(place_id):
