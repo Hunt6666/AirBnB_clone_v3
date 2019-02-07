@@ -17,13 +17,14 @@ def show_cities(state_id):
     Shows all states in file storage
     """
     cities = []
-    for city in storage.all('City').values():
-        if city.state_id == state_id:
-            cities.append(city.to_dict())
-    if cities != []:
-        return jsonify(cities)
-    else:
+    state = storage.get("State", state_id)
+    if state is None:
         abort(404)
+    for city in storage.all('City').values():
+        if city.state_id == state_id and state.id == state_id:
+            cities.append(city.to_dict())
+    return jsonify(cities)
+
 
 @app_views.route('/cities/<city_id>', strict_slashes=False, methods=['GET'])
 def show_a_city(city_id):
@@ -34,6 +35,7 @@ def show_a_city(city_id):
     if city:
         return jsonify(city.to_dict())
     abort(404)
+
 
 @app_views.route('/cities/<city_id>', strict_slashes=False,
                  methods=['DELETE'])
@@ -48,6 +50,7 @@ def del_a_city(city_id):
         return jsonify({}), 200
     else:
         abort(404)
+
 
 @app_views.route('cities/<city_id>', strict_slashes=False, methods=['PUT'])
 def update_a_city(city_id):
