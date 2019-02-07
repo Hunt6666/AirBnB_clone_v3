@@ -8,17 +8,6 @@ from models import storage
 from models.place import Place
 
 
-@app_views.route('/places', methods=['GET'], strict_slashes=False)
-def places():
-    """ gets a list of all places or makes one"""
-    if request.method == 'GET':
-        lst = []
-        objs = storage.all('Place')
-        for k, v in objs.items():
-            lst += [v.to_dict()]
-        return jsonify(lst)
-
-
 @app_views.route('/cities/<city_id>/places', methods=['POST', 'GET'],
                  strict_slashes=False)
 def places_city(city_id):
@@ -34,7 +23,7 @@ def places_city(city_id):
                 places += [v.to_dict()]
         return jsonify(places)
     if request.method == 'POST':
-        stf = request.get_json()
+        stf = request.get_json(silent=True)
         city = storage.get('City', city_id)
         if city is None:
             abort(404)
@@ -66,7 +55,7 @@ def place_by_id(place_id):
     if request.method == 'GET':
         pl = storage.get("Place", place_id)
         if pl is None:
-            return jsonify({"error": "Not found"}), 404
+            abort(404)
         else:
             return jsonify(pl.to_dict())
     if request.method == 'DELETE':
