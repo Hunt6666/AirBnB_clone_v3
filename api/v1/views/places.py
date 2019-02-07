@@ -71,8 +71,9 @@ def place_by_id(place_id):
         if pl is None:
             abort(404)
         else:
-            stf = request.get_json(silent=True)
-            if stf is None:
+            try:
+                stf = request.get_json(silent=True)
+            except:
                 return jsonify("Not a JSON"), 400
             ignore = ["id", "user_id", "city_id", "created_at", "updated_at"]
             for k, v in stf.items():
