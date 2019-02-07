@@ -15,8 +15,10 @@ def list_users():
     """
     Lists all users
     """
+    users = []
     for user in storage.all('User').values():
-        return jsonify(user.to_dict())
+        users.append(user.to_dict())
+    return jsonify(users), 200
 
 
 @app_views.route('/users/<user_id>', strict_slashes=False, methods=['GET'])
@@ -25,9 +27,10 @@ def show_a_user(user_id):
     Lists a user by using the user id
     """
     user = storage.get("User", user_id)
-    if user:
+    if user is None:
+        abort(404)
+    else:
         return jsonify(user.to_dict()), 200
-    abort(404)
 
 
 @app_views.route('/users/<user_id>', strict_slashes=False, methods=['DELETE'])
@@ -36,12 +39,12 @@ def del_a_user(user_id):
     Deletes a user by user_id; if found
     """
     user = storage.get("User", user_id)
-    if user:
-        user.delete()
+    if user is None:
+        abort(404)
+    else:
+        storage.delete(user)
         storage.save()
         return jsonify({}), 200
-    else:
-        abort(404)
 
 
 @app_views.route('/users/<user_id>', strict_slashes=False, methods=['PUT'])
@@ -54,13 +57,14 @@ def update_a_user(user_id):
     ignore = ['id', 'state_id', 'created_at', 'updated_at']
     if user is None:
         abort(404)
-    if info is None:
-        return "Not a JSON", 400
-    for k, v in info.items():
-        if k not in ignore:
-            setattr(user, k, v)
-    user.save()
-    return jsonify(user.to_dict()), 200
+    else:
+        if info is None:
+            return "Not a JSON", 400
+            for k, v in info.items():
+                if k not in ignore:
+                    setattr(user, k, v)
+            user.save()
+            return jsonify(user.to_dict()), 200
 
 
 @app_views.route('/users', strict_slashes=False, methods=['POST'])
