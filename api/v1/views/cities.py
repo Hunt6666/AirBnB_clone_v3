@@ -26,7 +26,6 @@ def show_cities(state_id):
     return jsonify(cities)
 
 
-
 @app_views.route('/cities/<city_id>', strict_slashes=False, methods=['GET'])
 def show_a_city(city_id):
     """
