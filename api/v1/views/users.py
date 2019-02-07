@@ -49,16 +49,16 @@ def update_a_user(user_id):
     """
     Updates a user by user_id
     """
-    info = request.get_json()
+    info = request.get_json(silent=True)
     user = storage.get('User', user_id)
     ignore = ['id', 'state_id', 'created_at', 'updated_at']
-    if not info:
+    if user is None:
+        abort(404)
+    if info is None:
         return "Not a JSON", 400
     for k, v in info.items():
         if k not in ignore:
             setattr(user, k, v)
-    if user is None:
-        abort(404)
     user.save()
     return jsonify(user.to_dict()), 200
 
