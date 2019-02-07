@@ -63,13 +63,13 @@ def update_a_city(city_id):
     if city is None:
         abort(404)
     else:
-        if info is None:
+        if not info:
             return "Not a JSON", 400
-            for k, v in info.items():
-                if k not in ignore:
-                    setattr(city, k, v)
-            city.save()
-            return jsonify(city.to_dict()), 200
+        for k, v in info.items():
+            if k not in ignore:
+                setattr(city, k, v)
+        city.save()
+        return jsonify(city.to_dict()), 200
 
 
 @app_views.route('/states/<state_id>/cities', strict_slashes=False,
