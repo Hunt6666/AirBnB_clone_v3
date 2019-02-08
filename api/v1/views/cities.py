@@ -48,7 +48,7 @@ def del_a_city(city_id):
     return jsonify({}), 200
 
 
-@app_views.route('cities/<city_id>', strict_slashes=False, methods=['PUT'])
+@app_views.route('/cities/<city_id>', strict_slashes=False, methods=['PUT'])
 def update_a_city(city_id):
     """
     Updates a city
