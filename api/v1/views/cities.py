@@ -54,13 +54,13 @@ def update_a_city(city_id):
     Updates a city
     """
     info = request.get_json(silent=True)
+    if not info:
+        return "Not a JSON", 400
     city = storage.get("City", city_id)
     ignore = ['id', 'state_id', 'created_at', 'updated_at']
     if city is None:
         abort(404)
     else:
-        if not info:
-            return "Not a JSON", 400
         for k, v in info.items():
             if k not in ignore:
                 setattr(city, k, v)
