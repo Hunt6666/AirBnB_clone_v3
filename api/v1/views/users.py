@@ -53,18 +53,18 @@ def update_a_user(user_id):
     Updates a user by user_id
     """
     info = request.get_json(silent=True)
+    if info is None:
+        return "Not a JSON", 400
     user = storage.get('User', user_id)
     ignore = ['id', 'email', 'created_at', 'updated_at']
     if user is None:
         abort(404)
     else:
-        if info is None:
-            return "Not a JSON", 400
-            for k, v in info.items():
-                if k not in ignore:
-                    setattr(user, k, v)
-            user.save()
-            return jsonify(user.to_dict()), 200
+        for k, v in info.items():
+            if k not in ignore:
+                setattr(user, k, v)
+        user.save()
+        return jsonify(user.to_dict()), 200
 
 
 @app_views.route('/users', strict_slashes=False, methods=['POST'])
