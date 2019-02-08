@@ -54,7 +54,7 @@ def update_a_user(user_id):
     """
     info = request.get_json(silent=True)
     user = storage.get('User', user_id)
-    ignore = ['id', 'state_id', 'created_at', 'updated_at']
+    ignore = ['id', 'email', 'created_at', 'updated_at']
     if user is None:
         abort(404)
     else:

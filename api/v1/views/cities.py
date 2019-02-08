@@ -75,7 +75,7 @@ def create_a_city(state_id):
     Creates a new city using state_id
     """
     info = ""
-    info = request.get_json()
+    info = request.get_json(silent=True)
     state = storage.get('State', state_id)
     if state is None:
         abort(404)
